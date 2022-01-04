@@ -12,19 +12,16 @@ class Layer:
         self.activations = None
 
 
-class NeuralNetwork:
+class NeuralNetwork:  # maybe add proper class docs
 
-    def __init__(self, sizes: List, epochs: int, learning_rate: float):
-        """Class representing neural network.
-        Contains with layers.
+    def __init__(self, sizes: List, learning_rate: float):
+        """Construct NeuralNetwork class instant
 
         Args:
-            sizes (List): list of numbers of neurons in succeesing neuron
-            epochs (int): number of epochs we want to train net
+            sizes (List): list of numbers of neurons in succeesing layers
             learning_rate (float): in other words, step in gradient descent
         """
 
-        self.epochs = epochs
         self.lrn_rate = learning_rate
         self.sizes = sizes
         self.layers = []
@@ -123,10 +120,10 @@ class NeuralNetwork:
             output = self.forward_pass(x)
             pred = np.argmax(output)
             predictions.append(pred == np.argmax(y))
-        return np.mean(predictions)
+        return round(np.mean(predictions), 3)
 
     def train(self, x_train: ArrayLike, y_train: ArrayLike,
-              x_val: ArrayLike, y_val: ArrayLike) -> None:
+              x_val: ArrayLike, y_val: ArrayLike, epochs: int) -> List[float]:
         """Conduct all training of network.
         Print current accuracy.
 
@@ -135,11 +132,18 @@ class NeuralNetwork:
             y_train (ArrayLike): output of learning dataset
             x_val (ArrayLike): input of validation dataset
             y_val (ArrayLike): output of validation dataset
+            epochs (int): number of epochs we want to train net
+
+        Returns:
+            List[float]: list of accuracies through epochs
         """
-        for i in range(self.epochs):
+        accs = []
+        for i in range(epochs):
             for x, y in zip(x_train, y_train):
                 output = self.forward_pass(x)
                 changes = self.backward_pass(y, output)
                 self.descent_update(changes)
-            accuracy = self.calc_acc(x_val, y_val)
-            print(f'Epoch {i}: accuracy: {accuracy}')
+            acc = self.calc_acc(x_val, y_val)
+            accs.append(acc)
+            print(f'Epoch {i}: accuracy: {acc}')
+        return accs
