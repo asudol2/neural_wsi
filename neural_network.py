@@ -27,16 +27,16 @@ class NeuralNetwork:
     def derivative(self, x: float) -> float:
         return (np.exp(-x))/((np.exp(-x) + 1) ** 2)
 
-    def forward_pass(self, x_train: ArrayLike):
+    def forward_pass(self, x_train: ArrayLike) -> ArrayLike:
         self.layers[0].activations = x_train
         for i in range(1, len(self.layers)):
             self.layers[i].new_weights = np.dot(self.layers[i].weights,
                                                 self.layers[i - 1].activations)
             self.layers[i].activations = self.activation(
                 self.layers[i].new_weights)
-        return self.layers[len(self.layers) - 1].activations  # jaki to typ?
+        return self.layers[len(self.layers) - 1].activations
 
-    def backward_pass(self, y_train: ArrayLike, output: ArrayLike):
+    def backward_pass(self, y_train: ArrayLike, output: ArrayLike) -> dict:
         change = {}
         error = 2 * (output - y_train) / output.shape[0] * self.derivative(
             self.layers[len(self.layers) - 1].new_weights)
@@ -49,7 +49,7 @@ class NeuralNetwork:
                 self.layers[i].new_weights)
 
             change[i] = np.outer(error, self.layers[i - 1].activations)
-        return change  # jaki to typ?
+        return change
 
     def descent_update(self, changes: dict) -> None:
         # gradient
