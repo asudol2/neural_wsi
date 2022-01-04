@@ -1,3 +1,4 @@
+from numpy.typing import ArrayLike
 import sklearn.datasets as skl
 from keras.utils.np_utils import to_categorical
 from sklearn.model_selection import train_test_split
@@ -12,19 +13,31 @@ from neural_network import NeuralNetwork
 # plt.show()
 
 
+def get_normal_data():  # czemu typ returna wysypuje kolorowanie składni?
+    """Get data to learn for net
+
+    Returns:
+        Bunch : normalized dataset
+    """
+    return skl.load_digits().data/16
+
+
+def get_actual_nums() -> ArrayLike:
+    """Get array of 'neurons' with expected values
+
+    Returns:
+        ArrayLike
+    """
+    return to_categorical(skl.load_digits().target)
+
+
 if __name__ == "__main__":
-    dataset = skl.load_digits().data
+    data = get_normal_data()
+    actual_nums = get_actual_nums()
 
-    # change image data from [0, 16] to [0, 1]
-    dataset = dataset/16
-
-    # represent the expected results as arrays with a 1 in the position 
-    # of the result number
-    # e.g. for result = 3, target array = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
-    target = to_categorical(skl.load_digits().target)
-
-    nn = NeuralNetwork([64, 32, 16, 10], 70, 0.1)  
+    net = NeuralNetwork([64, 32, 16, 10], 70, 0.1)
     # ^ostatnie to krok w gradiencie
     x_train, x_val, y_train, y_val = train_test_split(
-        dataset, target, test_size=0.2)
-    nn.train(x_train, y_train, x_val, y_val)
+        data, actual_nums, test_size=0.2)
+
+    net.train(x_train, y_train, x_val, y_val)

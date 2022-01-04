@@ -21,7 +21,7 @@ class NeuralNetwork:
         for i in range(len(self.sizes) - 1):
             self.layers.append(Layer(self.sizes[i], self.sizes[i + 1]))
 
-    def activation(self, x: float) -> float:
+    def activation(self, x: float):
         return 1/(1 + np.exp(-x))
 
     def derivative(self, x: float) -> float:
