@@ -12,7 +12,7 @@ class Layer:
         self.activations = None
 
 
-class NeuralNetwork:  # maybe add proper class docs
+class NeuralNetwork:
 
     def __init__(self, sizes: List, learning_rate: float):
         """Construct NeuralNetwork class instant

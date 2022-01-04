@@ -66,5 +66,5 @@ def plot(train_accs: List, test_acc: float, epochs: int) -> None:
              'go--', color='g', linewidth=2)
     plt.hlines(test_acc, 2, epochs - 2, colors='r')
 
-    plt.savefig('network_training.png')
+    plt.savefig('network_training_add.png')
     plt.show()
